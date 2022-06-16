@@ -20,13 +20,10 @@ class VoiceManager {
                     room = await Room.create({guildId: guild.id, userId: member.id, channelId: channel.id})
                 }
                 channel.permissionOverwrites.create(member.id, bot.config.permissions.privateroom.creator)
-                try {
-                    member?.voice?.setChannel(channel).catch(() => {})
+                member?.voice?.setChannel(channel).then(async () => {
                     room.channelId = channel.id
                     await room.save().catch(() => {})
-                } catch(err) {
-                    return channel.delete()
-                }
+                }).catch(async () => await channel.delete().catch(() => {}))
             })
         }
     }
