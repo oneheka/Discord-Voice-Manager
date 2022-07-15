@@ -17,13 +17,20 @@ class ClickRoomButton extends Event {
         if(button.member.voice.channel.id !== room.channelId) return button.reply({content: "Зайдите в свой приватный канал", ephemeral: true})
 
         if(button.customId == 'pvname') {
+            if(room.cooldown > Date.now()) return await button.reply({content: `Подождите ${(room.cooldown-Date.now())/1000}`, ephemeral: true})
             button.reply({content: 'Укажите новое название канала', ephemeral: true})
             const filter = m => m.author.id === button.user.id
             const collector = button.channel.createMessageCollector({filter: filter, time: 30000, max: 1 })
 
             collector.on('collect', m => {
                 if(m.content.length > 20) m.content = m.content.slice(0, 20)
-                channel.edit({name: m.content})
+
+                room.cooldown = Math.round(Date.now() + (60*5*1000))
+
+                Promise.all([
+                     await room.save(),
+                     await channel.edit({name: m.content})
+                ])
 
                 return button.editReply({content: `Вы изменили название канала на **${m.content}**`})
             })
