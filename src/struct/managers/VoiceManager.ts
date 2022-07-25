@@ -18,7 +18,7 @@ export default class VoiceManager {
             )
 
             if (room && member?.voice) {
-                if (3000 > Number(Date.now()-room.leave)) return member.voice.disconnect().catch(() => {})
+                if (30000 > Number(Date.now()-room.leave)) return member.voice.disconnect().catch(() => {})
                 if (guild.channels.cache.get(room.channelId)) return member.voice.setChannel(room.channelId).catch(() => {})
             }
 
