@@ -54,6 +54,7 @@ export default class VoiceManager {
         const room = await Room.findOne({guildId: guild.id, channelId: channel.id})
 
         if (!channel?.parent || channel.id == res.channels.voice) return
+        if(channel.parent.id !== res.channels.category) return
 
         if(channel.members.size == 0) await channel.delete('Выход из комнаты').catch(() => {})
 
