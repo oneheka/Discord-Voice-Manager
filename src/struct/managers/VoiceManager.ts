@@ -35,10 +35,9 @@ export default class VoiceManager {
                 ],
                 reason: 'Создание приватной комнаты'
             }).then(async channel => {
-                member?.voice?.setChannel(channel).then(async (): Promise<any> => {
+                member?.voice?.setChannel(channel.id).then(async (): Promise<any> => {
                     room.channelId = channel.id
                     await room.save().catch(() => {})
-                    return
                 }).catch(async () => await channel.delete('Защита от ддоса приватных комнат').catch(() => {}))
             })
 
@@ -58,7 +57,7 @@ export default class VoiceManager {
 
         if(channel.members.size == 0) await channel.delete('Выход из комнаты').catch(() => {})
 
-        if(room.userId == member.id) {
+        if(room?.userId && room?.userId == member.id) {
             room.leave = Date.now()
             await room.save()    
         }
