@@ -3,7 +3,6 @@ import { intents, internal } from '../config'
 import { readdir } from 'fs'
 
 export default class Core extends Client {
-    readonly functions: Collection<string, Function> = new Collection()
     readonly buttons: Collection<string, Function> = new Collection()
 
     constructor() {
