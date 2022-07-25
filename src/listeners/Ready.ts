@@ -38,7 +38,7 @@ export default new Event(
                     .setTitle('Управление приватной комнатой')
                     .setDescription('> Жми следующие кнопки, чтобы настроить свою комнату')
                     .setFooter({text: 'Использовать их можно только когда у тебя есть приватный канал'})
-                    .setImage('https://cdn.discordapp.com/attachments/950282150043869214/962029835151089674/unknown.png')
+                    .setImage(config.line)
                     .addFields(
                         {
                             name: '** **',
