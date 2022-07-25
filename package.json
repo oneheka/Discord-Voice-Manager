@@ -1,28 +1,16 @@
 {
   "name": "main",
-  "version": "2.0.0",
-  "author": "Heka#4589",
-  "description": "Лучший ботик по приватным комнатам",
+  "version": "1.0.0",
+  "description": "",
   "main": "main.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/main.ts",
-    "build": "tsc --build",
-    "start": "node dist/main.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "Heka#4589",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.0.0",
-    "mongoose": "^6.3.3",
-    "ms": "^2.1.2",
-    "typescript": "^4.7.4"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/HekaHub/Discord-Voice-Manager.git"
-  },
-  "bugs": {
-    "url": "https://github.com/HekaHub/Discord-Voice-Manager/issues"
-  },
-  "homepage": "https://github.com/HekaHub/Discord-Voice-Manager#readme"
+    "discord.js": "^13.6.0",
+    "mongoose": "^6.1.6",
+    "ms": "^2.1.2"
+  }
 }
