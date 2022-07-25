@@ -28,6 +28,7 @@ interface IGuildConfig {
         voice: string,
         category: string
     },
+    line: string,
     emojis: {
         limit: string,
         name: string,
@@ -54,6 +55,7 @@ export const guilds = new Collection<string, IGuildConfig>()
             voice: '', // id голосового канала приваток
             category: '' // id категории где будут создаваться приватные комнаты
         },
+        line: 'https://cdn.discordapp.com/attachments/950282150043869214/962029835151089674/unknown.png', // Линия в панели управления (сейчас стоит прозрачная)
         emojis: { // Эмодзи :)
             limit: '👥',
             name: '🖊',
