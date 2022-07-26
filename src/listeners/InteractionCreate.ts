@@ -8,7 +8,7 @@ export default new Event(
     'interactionCreate',
     async (bot: Core, interaction: Interaction) => {
         const config = guilds.get(interaction.guild.id)
-        if(interaction.isButton() && interaction.channel.id == config.channels.text) {
+        if(interaction.isButton() && interaction.channel.id === config.channels.text) {
             const button = interaction as ButtonInteraction
             const author = interaction.member as GuildMember
             const room = await Room.findOne({guildId: button.guild.id, userId: author.id})
