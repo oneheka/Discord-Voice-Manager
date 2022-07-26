@@ -57,7 +57,7 @@ export default class VoiceManager {
         if (channel.parent.id !== res.channels.category) return
 
         if (channel.members.size == 0) {
-             if(typeof channel.parent.id === 'string') await channel.delete('Выход из комнаты').catch(() => {})
+             if(channel.parent.id === res.channels.category) await channel.delete('Выход из комнаты').catch(() => {})
         }
 
         if (room?.userId && room?.userId == member.id) {
