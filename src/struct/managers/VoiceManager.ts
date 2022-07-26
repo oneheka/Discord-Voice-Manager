@@ -11,7 +11,7 @@ export default class VoiceManager {
         const res = guilds.get(guild.id)
         if (!res) return
 
-        if (channel.id == res.channels.voice) {
+        if (channel.id === res.channels.voice) {
             const room = (
                 await Room.findOne({guildId: guild.id, userId: member.id}) ??
                 await Room.create({guildId: guild.id, userId: member.id})
@@ -53,16 +53,16 @@ export default class VoiceManager {
 
         const room = await Room.findOne({guildId: guild.id, channelId: channel.id})
 
-        if (!channel?.parent || channel.id == res.channels.voice) return
+        if (!channel?.parent || channel.id === res.channels.voice) return
         if (channel.parent.id !== res.channels.category) return
 
-        if (channel.members.size == 0) {
+        if (channel.members.size === 0) {
              if(channel.parent.id === res.channels.category) await channel.delete('Выход из комнаты').catch(() => {})
         }
 
-        if (room?.userId && room?.userId == member.id) {
+        if (room?.userId && room?.userId === member.id) {
             room.leave = Date.now()
-            await room.save()    
+            await room.save()
         }
     }
 }
