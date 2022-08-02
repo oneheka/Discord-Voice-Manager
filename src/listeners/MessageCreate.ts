@@ -9,6 +9,7 @@ export default new Event(
         if (!message.guild || message.author.id == bot.user.id) return
 
         const get = guilds.get(message.guild.id)
+        if (!get) return
         if (message.channel.id == get.channels.text) {
             if (message.deletable) await message.delete().catch(() => {})
         }
