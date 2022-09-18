@@ -24,10 +24,8 @@ export default new Button(
 
             const res = (
                 await Room.findOne({guildId: button.guild.id, userId: member.id}) ??
-                await Room.findOne({guildId: button.guild.id, channelId: room.channelId})
+                await Room.create({guildId: button.guild.id, userId: member.id})
             )
-
-            if(!res) return button.editReply({ content:  `Канал не является приватным` })
 
             res.channelId = member.voice.channel.id 
             room.channelId = '0'
