@@ -27,6 +27,11 @@ export default new Button(
                 await Room.create({guildId: button.guild.id, userId: member.id})
             )
 
+            if(res.channelId !== '0') {
+                const memVoice = button.guild.channels.cache.get(res.channelId)
+                if(memVoice) return button.editReply({content: 'У участника уже есть приватный канал'})
+            }
+
             res.channelId = member.voice.channel.id 
             room.channelId = '0'
 
