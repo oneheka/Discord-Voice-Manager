@@ -20,7 +20,6 @@ export const intents = [
 ]
 
 interface IGuildConfig {
-    owner: string,
     message: string,
     style: ButtonStyle,
     channels: {
@@ -47,7 +46,6 @@ export const guilds = new Collection<string, IGuildConfig>()
 .set(
     '', // id Сервера
     {
-        owner: '', // Ваш id или id разработчика
         message: '', // id Сообщения (если сообщения нет, оставляете путсым, до заполнения)
         style: ButtonStyle.Secondary, // Стиль кнопок (выбирать из предложенных от класса)
         channels: {
