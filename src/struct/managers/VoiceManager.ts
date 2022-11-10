@@ -47,7 +47,6 @@ export default class VoiceManager {
     static async onRoomLeave(bot: Core, state: VoiceState) {
         const { member, channel, guild } = state
         if (!member || !guild || !channel) return
-        if (member.user.bot) return
         const res = guilds.get(guild.id)
         if (!res) return
 
