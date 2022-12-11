@@ -8,7 +8,7 @@ export default class EventHandler {
     constructor(
         private client: Client
     ) {
-        this.dir = `${__dirname}/../../app/events`
+        this.dir = `${__dirname}/../../app/Events`
     }
 
     load() {
