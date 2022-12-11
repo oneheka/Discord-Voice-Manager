@@ -1,19 +1,19 @@
 import { EmbedBuilder as DJSEmbedBuilder, GuildMember, VoiceChannel } from 'discord.js';
+import { guilds } from '../../config';
 import { TRoom } from '../../database/room/Room';
 import GuildConfig from '../../types/GuildConfig';
 import Utils from './Utils';
 
 export default class EmbedBuilder extends DJSEmbedBuilder {
-    constructor() {
-        super({color: 0x2f3136})
-    }
-
     default(member: GuildMember, title: string, description: string) {
-        return this.setTitle(title).setDescription(`${member.toString()}, ${description}`).setThumbnail(Utils.getAvatar(member))
+        return this.setTitle(title).setColor(guilds.get(member.guild.id)!.color)
+        .setDescription(`${member.toString()}, ${description}`)
+        .setThumbnail(Utils.getAvatar(member))
     }
 
     settingRoomEmbed(config: GuildConfig) {
         return this.setTitle('Управление приватной комнатой')
+        .setColor(config.color)
         .setDescription(
             'Жми следующие кнопки, чтобы настроить свою комнату' + '\n'
             + 'Использовать их можно только когда у тебя есть приватный канал' + '\n\n'
@@ -37,6 +37,7 @@ export default class EmbedBuilder extends DJSEmbedBuilder {
 
         return this.setTitle(config.buttons.info.title)
         .setThumbnail(Utils.getAvatar(member))
+        .setColor(guilds.get(member.guild.id)!.color)
         .setDescription(
             '**Приватная комната:**' + ` ${channel.toString()}` + '\n'
             + '**Пользователи:**' + ` ${channel.members.size}/${channel.userLimit === 0 ? 'ꝏ' : channel.userLimit}` + '\n'
@@ -56,6 +57,7 @@ export default class EmbedBuilder extends DJSEmbedBuilder {
 
         const embed = this.setTitle('Права пользователей приватной комнаты')
         .setThumbnail(Utils.getAvatar(member))
+        .setColor(guilds.get(member.guild.id)!.color)
         .setFooter(
             { text: `Страница: ${page+1}/${max}` }
         )
