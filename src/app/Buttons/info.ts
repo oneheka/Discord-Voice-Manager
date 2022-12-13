@@ -30,8 +30,8 @@ export default new Interaction(
         )
 
         collector.on('collect', async (interaction: ChannelSelectMenuInteraction<'cached'> | ButtonInteraction<'cached'>): Promise<any> => {
-            collector.resetTimer({time: 60_000})
-            
+            collector.resetTimer({time: 30_000})
+
             if(interaction.isChannelSelectMenu()) {
                 await (await import('./Collectors/info/infoMenu')).default(client, button, interaction, config)
             } else if(interaction.isButton()) {
@@ -61,6 +61,21 @@ export default new Interaction(
 
             if(!interaction.replied && !interaction.deferred) {
                 return interaction.deferUpdate()
+            }
+        })
+
+        collector.on('end', (collected, reasone: string): any => {
+            if(reasone === 'time') {
+                return button.editReply({
+                    embeds: [
+                        new EmbedBuilder().default(
+                            button.member,
+                            config.buttons[button.customId]!.title,
+                            `Время на **ответ** вышло`
+                        )
+                    ],
+                    components: [ new ActionRowBuilder().menuChannel('info', config.placeholder.channel, true) ]
+                })
             }
         })
     }
