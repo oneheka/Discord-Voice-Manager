@@ -30,6 +30,8 @@ export default new Interaction(
         )
 
         collector.on('collect', async (interaction: ChannelSelectMenuInteraction<'cached'> | ButtonInteraction<'cached'>): Promise<any> => {
+            collector.resetTimer({time: 60_000})
+            
             if(interaction.isChannelSelectMenu()) {
                 await (await import('./Collectors/info/infoMenu')).default(client, button, interaction, config)
             } else if(interaction.isButton()) {
