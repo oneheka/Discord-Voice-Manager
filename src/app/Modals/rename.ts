@@ -1,6 +1,6 @@
+import { VoiceChannel } from 'discord.js';
 import EmbedBuilder from '../../strcut/utils/EmbedBuilder';
 import Interaction from '../../strcut/base/Interaction';
-import { VoiceChannel } from 'discord.js';
 
 export default new Interaction(
     'rename',
