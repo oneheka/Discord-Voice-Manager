@@ -18,7 +18,7 @@ export default async (client: Client, button: ButtonInteraction<'cached'>, btn: 
         })
     }
 
-    const get = await client.db.rooms.findChannel(channel.id)
+    const get: any = await client.db.rooms.get(channel.id)
     if(!get) {
         return button.editReply({
             embeds: [ new EmbedBuilder().default(
@@ -33,7 +33,6 @@ export default async (client: Client, button: ButtonInteraction<'cached'>, btn: 
     return button.editReply({
         embeds: [ new EmbedBuilder().infoRoom(
             button.member,
-            config,
             channel,
             get
         ) ],

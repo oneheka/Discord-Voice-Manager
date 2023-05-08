@@ -11,7 +11,7 @@ export default class Mongoose {
 
     async connect() {
         await mongoose.connect(
-            this.client.config.internal.mongoURL,
+            '123',//this.client.config.internal.mongoURL,
             {
                 autoIndex: true,
                 autoCreate: true

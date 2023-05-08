@@ -1,10 +1,12 @@
 import { VoiceChannel } from 'discord.js';
 import EmbedBuilder from '../../strcut/utils/EmbedBuilder';
 import Interaction from '../../strcut/base/Interaction';
+import Client from '../../strcut/Client';
+import { Setting } from '../../types/base/DB';
 
 export default new Interaction(
     'limit',
-    async (client, modal, config, res): Promise<any> => {
+    async (client: Client, modal, config, res: Setting): Promise<any> => {
         await modal.deferReply({ephemeral: true})
 
         const count = Number(modal.fields.getTextInputValue('count'))
@@ -20,8 +22,8 @@ export default new Interaction(
         }
 
         if(res) {
-            res.limit = count
-            await client.db.rooms.save(res)
+            res.userLimit = count;
+            await client.db.settings.dbSet(res);
         }
 
         await (modal.member.voice.channel as VoiceChannel).setUserLimit(count)

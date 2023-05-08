@@ -1,43 +1,52 @@
 import { EmbedBuilder as DJSEmbedBuilder, GuildMember, VoiceChannel } from 'discord.js';
-import { guilds } from '../../config';
+import { settings } from '../../config';
 import { TRoom } from '../../database/room/Room';
-import GuildConfig from '../../types/GuildConfig';
 import Utils from './Utils';
+import Client from '../Client';
 
 export default class EmbedBuilder extends DJSEmbedBuilder {
     default(member: GuildMember, title: string, description: string) {
-        return this.setTitle(title).setColor(guilds.get(member.guild.id)!.color)
+        return this.setTitle(title).setColor(settings!.color)
         .setDescription(`${member.toString()}, ${description}`)
         .setThumbnail(Utils.getAvatar(member))
     }
 
-    settingRoomEmbed(config: GuildConfig) {
+    settingRoomEmbed(client: Client) {
         return this.setTitle('Управление приватной комнатой')
-        .setColor(config.color)
+        .setColor(settings.color)
         .setDescription(
-            'Жми следующие кнопки, чтобы настроить свою комнату' + '\n'
-            + 'Использовать их можно только когда у тебя есть приватный канал' + '\n\n'
-            + (
-                (config.dot || '') + (config.buttons.rename ? (`${config.buttons.rename.emoji} — \`${config.buttons.rename.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.limit ? (`${config.buttons.limit.emoji} — \`${config.buttons.limit.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.close ? (`${config.buttons.close.emoji} — \`${config.buttons.close.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.hide ? (`${config.buttons.hide.emoji} — \`${config.buttons.hide.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.user ? (`${config.buttons.user.emoji} — \`${config.buttons.user.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.speak ? (`${config.buttons.speak.emoji} — \`${config.buttons.speak.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.kick ? (`${config.buttons.kick.emoji} — \`${config.buttons.kick.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.reset ? (`${config.buttons.reset.emoji} — \`${config.buttons.reset.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.owner ? (`${config.buttons.owner.emoji} — \`${config.buttons.owner.title.toLowerCase()}\`` + '\n') : '')
-                + (config.dot || '') + (config.buttons.info ? (`${config.buttons.info.emoji} — \`${config.buttons.info.title.toLowerCase()}\``) : '')
-            )
-        ).setImage(config?.line ? config.line : null)
+            '> Жми следующие кнопки, чтобы настроить свою комнату' + '\n'
+        ).setImage(settings?.line ? 'https://cdn.discordapp.com/attachments/966972126806573089/1104607266533031966/line.png' : null)
+        .setURL('https://github.com/HekaHub/Discord-Voice-Manager')
+        .addFields([ {
+            name: '** **',
+            value: 
+            Object.keys(settings.buttons).filter((btn, i) => i % 2 == 0)
+            .map(btn => 
+                //@ts-ignore
+                (settings.dot || '') + (settings.buttons[btn] ? (`${client.emojisStorage.cache.get(btn)} ・ ${settings.buttons[btn].title.toLowerCase()}`) : '')
+            ).join('\n'),
+            inline: true
+        },
+        {  
+            name: '** **',
+            value: Object.keys(settings.buttons).filter((btn, i) => i % 2 == 1)
+            .map(btn => 
+                //@ts-ignore
+                (settings.dot || '') + (settings.buttons[btn] ? (`${client.emojisStorage.cache.get(btn)} ・ ${settings.buttons[btn].title.toLowerCase()}`) : '')
+            ).join('\n'),
+            inline: true
+        }
+        ])
+        .setFooter({text: 'Использовать их можно только когда у тебя есть приватный канал'})
     }
 
-    infoRoom(member: GuildMember, config: GuildConfig, channel: VoiceChannel, get: TRoom) {
+    infoRoom(member: GuildMember, channel: VoiceChannel, get: TRoom) {
         const guildPerms = channel.permissionOverwrites.cache.get(member.guild.id)
-
-        return this.setTitle(config.buttons.info.title)
+        //@ts-ignore
+        return this.setTitle(settings.buttons['info'].title)
         .setThumbnail(Utils.getAvatar(member))
-        .setColor(guilds.get(member.guild.id)!.color)
+        .setColor(settings.color)
         .setDescription(
             '**Приватная комната:**' + ` ${channel.toString()}` + '\n'
             + '**Пользователи:**' + ` ${channel.members.size}/${channel.userLimit === 0 ? 'ꝏ' : channel.userLimit}` + '\n'
@@ -57,7 +66,7 @@ export default class EmbedBuilder extends DJSEmbedBuilder {
 
         const embed = this.setTitle('Права пользователей приватной комнаты')
         .setThumbnail(Utils.getAvatar(member))
-        .setColor(guilds.get(member.guild.id)!.color)
+        .setColor(settings!.color)
         .setFooter(
             { text: `Страница: ${page+1}/${max}` }
         )

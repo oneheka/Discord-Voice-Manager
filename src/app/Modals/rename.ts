@@ -1,10 +1,11 @@
 import { VoiceChannel } from 'discord.js';
 import EmbedBuilder from '../../strcut/utils/EmbedBuilder';
 import Interaction from '../../strcut/base/Interaction';
+import Client from '../../strcut/Client';
 
 export default new Interaction(
     'rename',
-    async (client, modal, config, res): Promise<any> => {
+    async (client: Client, modal, config, res, room): Promise<any> => {
         await modal.deferReply({ephemeral: true})
 
         const name = modal.fields.getTextInputValue('name')
@@ -12,7 +13,7 @@ export default new Interaction(
         const voice = modal.member.voice.channel as VoiceChannel
 
         if(res) {
-            if(res.cooldown > Date.now()) {
+            if( res.cooldown > Date.now() + 10*1000*60 ) {
                 return modal.editReply({
                     embeds: [ new EmbedBuilder().default(
                         modal.member,
@@ -22,9 +23,12 @@ export default new Interaction(
                 })
             }
 
-            res.name = name
-            res.cooldown = Date.now() + (60*2.5*1000)
-            await client.db.rooms.save(res)
+            let cd = Date.now()
+            if(room.cooldown > Date.now() - 10*1000*60) cd += 10 * 60 * 1000
+            room.cooldown = cd
+            await client.db.rooms.dbSet(room)
+            res.name = name;
+            await client.db.settings.dbSet(res);
         }
 
         await voice.setName(name)

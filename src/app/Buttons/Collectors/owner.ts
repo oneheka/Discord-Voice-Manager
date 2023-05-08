@@ -71,13 +71,13 @@ export default async (client: Client, button: ButtonInteraction<'cached'>, menu:
         }
     )
 
-    const room = await client.db.rooms.findChannel(voice.id)
-    if(room) {
-        const res = await client.db.rooms.findUser(menu.guildId, member.id)
-        res.channelId = voice.id
-        await client.db.rooms.remove(room)
-        await client.db.rooms.save(res)
-    }
+    // const room = await client.db.rooms.findChannel(voice.id)
+    // if(room) {
+    //     const res = await client.db.rooms.findUser(menu.guildId, member.id)
+    //     res.channelId = voice.id
+    //     await client.db.rooms.remove(room)
+    //     await client.db.rooms.save(res)
+    // }
 
     return button.editReply({
         embeds: [ new EmbedBuilder().default(

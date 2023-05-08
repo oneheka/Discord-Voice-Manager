@@ -13,10 +13,8 @@ export default new Event(
         } else if(oldState?.channel && !newState?.channel) {
             return VoiceManager.onRoomLeave(client, oldState)
         } else if(oldState?.channel !== newState.channel) {
-            Promise.all([
-                await VoiceManager.onRoomJoin(client, newState),
-                await VoiceManager.onRoomLeave(client, oldState)
-            ])
+            VoiceManager.onRoomJoin(client, newState),
+            VoiceManager.onRoomLeave(client, oldState)
         }
     }
 )
