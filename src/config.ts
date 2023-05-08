@@ -1,7 +1,7 @@
 import { GatewayIntentBits, Collection, ButtonStyle } from 'discord.js';
 
 export const internal = {
-    token: 'MTEwNDAzNDY5NTMwMzQwOTcyNg.G_LXka.N3Ja6Z0mahhE0I98wL_OqTKmDJIWWvQJrV6mAk', // Токен бота (https://discord.com/developers/applications)
+    token: '', // Токен бота (https://discord.com/developers/applications)
 }
 
 export const intents: GatewayIntentBits[] | number = 131071 // Все интенты
