@@ -18,7 +18,7 @@ export default new Event(
         if(interaction.isButton()) {
             const get = client.util.getButton(interaction.customId)
             if(get) {
-                if(interaction.customId !== 'info' && room.ownerId !== member.id) {
+                if(interaction.customId !== 'info' && room?.ownerId !== member.id) {
                     return interaction.reply({
                         embeds: [ new EmbedBuilder().default(
                             member,

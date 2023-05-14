@@ -6,7 +6,6 @@ import * as config from '../config';
 import Logger from './utils/Logger';
 import Utils from './utils/Utils';
 import EmojiStorage from './utils/EmojisStorage';
-import AvatarUpdater from './utils/AvatarUpdater';
 
 export default class Client extends DJSClient {
     constructor() {
@@ -27,7 +26,6 @@ export default class Client extends DJSClient {
     util: Utils = new Utils(this)
 
     emojisStorage: EmojiStorage = new EmojiStorage(this)
-    avatarUpdater: AvatarUpdater = new AvatarUpdater(this)
     
     db: DB = db
 

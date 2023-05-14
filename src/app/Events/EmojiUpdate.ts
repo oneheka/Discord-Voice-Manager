@@ -29,24 +29,27 @@ function main(client: Client, channel: Channel) {
             
             let textChannel = client.channels.cache.get(creator.textChannelId) as TextChannel
             if(textChannel) {
-                await textChannel.bulkDelete(100)
-                textChannel.fetchWebhooks().then(async webhooks => {
-                    let webhook;
-                    if(!webhooks.size) {
-                        webhook = await textChannel.createWebhook({
-                            name: client.config.settings.webhook.name, 
-                            avatar: `${__dirname}/../../../assets/avatar.png`
-                        })
-                    } else {
-                        webhook = webhooks.find(webhook => webhook.owner!.id === client.user!.id)
-                        if(webhook)
-                            await webhook.edit({ name: client.config.settings.webhook.name, avatar: `${__dirname}/../../../assets/avatar.png` })
-                    }
-                    if(webhook) {
-                        webhook?.send({embeds, components})
-                    }
+                try {
+                    await textChannel.bulkDelete(100)
+                    textChannel.fetchWebhooks().then(async webhooks => {
+                        
+                        let webhook;
+                        if(!webhooks.size) {
+                            webhook = await textChannel.createWebhook({
+                                name: client.config.settings.webhook.name, 
+                                avatar: `${__dirname}/../../../assets/avatar.png`
+                            })
+                        } else {
+                            webhook = webhooks.find(webhook => webhook.owner!.id === client.user!.id)
+                            if(webhook)
+                                await webhook.edit({ name: client.config.settings.webhook.name, avatar: `${__dirname}/../../../assets/avatar.png` })
+                        }
+                        if(webhook) {
+                            webhook?.send({embeds, components})
+                        }
                     
-                })
+                    })
+                } catch(e) {}
             }
         })
     }

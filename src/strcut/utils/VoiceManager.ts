@@ -41,6 +41,8 @@ export default class VoiceManager {
 
         const name = client.util.resolveChannelName(config, member)
 
+        if(member.voice.channelId !== creator.voiceChannelId) return;
+
         guild.channels.create(
             {
                 name: settings.name === '0' ? name : settings.name,
@@ -58,6 +60,8 @@ export default class VoiceManager {
             }
         ).then(async channel => {
             member?.voice?.setChannel(channel.id).then(async () => {
+                settings.leave = Date.now();
+                client.db.settings.dbSet(settings)
                 client.db.rooms.dbSet({
                     voiceChannelId: channel.id,
                     ownerId: member.id,
@@ -73,20 +77,21 @@ export default class VoiceManager {
         const config = client.config.settings
         if(!config) return
 
-        const room: any = await client.db.rooms.get(channel.id)
+        const room = await client.db.rooms.dbGet(channel.id)
         let creator = client.db.creators.find(creator => creator.voiceChannelId === channel.id || creator.categoryId === channel.parentId) as Creator
+        if(!creator) return;
         if(!channel?.parent || channel.id === creator.voiceChannelId) return
-        if(channel.parent.id !== creator.categoryId) return
+        if(channel.parent.id !== creator?.categoryId) return
 
         if(channel.members.size === 0 && client.db.rooms.has(channel.id)) {
             await channel.delete('Выход из комнаты').catch(() => {})
             await client.db.rooms.dbDelete(channel.id)
         }
 
-        if(room && room?.userId === member.id) {
+        if(room && room?.ownerId === member.id) {
             let settings = await client.db.settings.get(member.id) as Setting
             settings.leave = Math.round(Date.now() + client.config.cooldownVoiceJoin)
-            await client.db.settings.set(member.id, settings)
+            await client.db.settings.dbSet(settings)
         }
     }
 }

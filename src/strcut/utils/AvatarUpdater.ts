@@ -21,7 +21,6 @@ export default class AvatarUpdater {
                     if (!err)
                     if(last + 1000 > Date.now()) return;
                     setTimeout(() => {
-                        console.log(123)
                         this.client.emit('emojiStorageUpdate')
                     }, 1000)
                     last = Date.now();

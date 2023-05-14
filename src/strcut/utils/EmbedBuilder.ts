@@ -1,6 +1,5 @@
 import { EmbedBuilder as DJSEmbedBuilder, GuildMember, VoiceChannel } from 'discord.js';
 import { settings } from '../../config';
-import { TRoom } from '../../database/room/Room';
 import Utils from './Utils';
 import Client from '../Client';
 
@@ -41,7 +40,7 @@ export default class EmbedBuilder extends DJSEmbedBuilder {
         .setFooter({text: 'Использовать их можно только когда у тебя есть приватный канал'})
     }
 
-    infoRoom(member: GuildMember, channel: VoiceChannel, get: TRoom) {
+    infoRoom(member: GuildMember, channel: VoiceChannel, get: any) {
         const guildPerms = channel.permissionOverwrites.cache.get(member.guild.id)
         //@ts-ignore
         return this.setTitle(settings.buttons['info'].title)

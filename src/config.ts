@@ -6,7 +6,7 @@ export const internal = {
 
 export const intents: GatewayIntentBits[] | number = 131071 // Все интенты
 
-export const cooldownVoiceJoin: number = 0
+export const cooldownVoiceJoin: number = 1000 // Задержка на вход в голосовой канал (в миллисекундах)
 
 export const settings = {
     webhook : {
@@ -53,5 +53,5 @@ export const settings = {
     },
     line: true, // Линия в панели управления (сейчас она не стоит, чтобы её поставить впишите "true" вместо "false")
     dot: false, // Эмодзи перед эмодзи в панели комнаты (сейчас эмодзи не стоит, чтобы поставить впишите "true" вместо "false")
-    debug: true // Отладка (сейчас она не стоит, чтобы её поставить впишите "true" вместо "false")
+    debug: false // Отладка (сейчас она не стоит, чтобы её поставить впишите "true" вместо "false")
 }

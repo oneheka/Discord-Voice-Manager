@@ -3,6 +3,8 @@ import Interaction from '../../strcut/base/Interaction';
 import IGuildConfig from '../../types/GuildConfig';
 import Client from '../../strcut/Client';
 
+const maxNameLength = 100
+
 export default new Interaction(
     'rename',
     async (client: Client, button: ButtonInteraction<'cached'>, config: IGuildConfig) => {
@@ -18,8 +20,8 @@ export default new Interaction(
                     .setCustomId('name')
                     .setLabel('Новое имя')
                     .setPlaceholder('Укажите новое имя приватной комнаты')
-                    .setValue(button.member.voice.channel!.name)
-                    .setMaxLength(64)
+                    .setValue(button.member.voice.channel!.name.substring(0, maxNameLength))
+                    .setMaxLength(maxNameLength)
                     .setMinLength(1)
                     .setRequired(true)
                 )

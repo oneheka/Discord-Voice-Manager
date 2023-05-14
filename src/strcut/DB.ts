@@ -60,7 +60,7 @@ export class DB {
                 this.rooms.set(room.voiceChannelId, room);
             })
         } catch {
-            this.file.run('CREATE TABLE rooms (id INTEGER PRIMARY KEY AUTOINCREMENT, guildId TEXT, voiceChannelId TEXT, ownerId TEXT)');
+            this.file.run('CREATE TABLE rooms (id INTEGER PRIMARY KEY AUTOINCREMENT, voiceChannelId TEXT, ownerId TEXT, cooldown INTEGER)');
         }
         try {
             let settings = await this.file.all('SELECT * FROM settings') as Setting[];
@@ -177,12 +177,20 @@ class RoomManager extends Collection<string, Room> {
         }
         return result;
     }
-    dbSet(room: Room) {
-        let roomDb = this.db.file.all('SELECT * FROM rooms WHERE voiceChannelId = ?', [room.voiceChannelId])[0];
+    async dbSet(room: Room) {
+        let roomDb = this.get(room.voiceChannelId)
+        if(!roomDb)
+        roomDb = await this.db.file.all('SELECT * FROM rooms WHERE voiceChannelId = ?', [room.voiceChannelId])[0];
         if(!roomDb) {
-            this.db.file.run('INSERT INTO rooms (voiceChannelId, ownerId) VALUES (?, ?)', [room.voiceChannelId, room.ownerId]);
-        } else
-            this.db.file.run('UPDATE rooms SET ownerId = ? WHERE voiceChannelId = ?', [room.ownerId, room.voiceChannelId]);
+            roomDb = room;
+            this.db.file.run('INSERT INTO rooms (voiceChannelId, ownerId, cooldown) VALUES (?, ?, ?)', [room.voiceChannelId, room.ownerId, room.cooldown]);
+        } else {
+            if (roomDb.ownerId !== room.ownerId || roomDb.cooldown !== room.cooldown)
+            this.db.file.run(`UPDATE rooms SET 
+            ${roomDb.ownerId !== room.ownerId ? `ownerId = ${room.ownerId}` : ''}
+            ${roomDb.cooldown !== room.cooldown ? `cooldown = ${room.cooldown}` : ''}
+            WHERE voiceChannelId = ?`, [room.voiceChannelId])
+        }
         return this.set(`${room.voiceChannelId}`, room);
     }
     dbDelete(voiceChannelId: string) {
@@ -209,25 +217,36 @@ class SettingsManager extends Collection<string, Setting> {
             else {
                 result = {
                     userId: userId,
-                    name: this.client.users.cache.get(userId)?.username || '???',
+                    name: '0',
                     userLimit: 0,
                     locked: 0,
                     visible: 0,
                     leave: 0
                 }
                 this.set(`${userId}`, result);
-                this.db.file.run('INSERT INTO settings (userId, name, userLimit, locked, visible, leave) VALUES (?, ?, ?, ?, ?, ?)', [result.userId, result.name, result.userLimit, result.locked, result.visible, result.leave]);
+                this.db.file.run('INSERT INTO settings (userId, name, userLimit, locked, visible) VALUES (?, ?, ?, ?, ?)', [result.userId, result.name, result.userLimit, result.locked, result.visible]);
             }
         }
         return result;
     }
 
-    dbSet(setting: Setting) {
-        let settingDb = this.db.file.all('SELECT * FROM settings WHERE userId = ?', [setting.userId])[0];
+    async dbSet(setting: Setting) {
+        let settingDb = this.get(setting.userId)
+        if(!settingDb)
+            settingDb = await this.db.file.all('SELECT * FROM settings WHERE userId = ?', [setting.userId])[0];
         if(!settingDb) {
-            this.db.file.run('INSERT INTO settings (userId, name, userLimit, locked, visible, leave) VALUES (?, ?, ?, ?, ?, ?)', [setting.userId, setting.name, setting.userLimit, setting.locked, setting.visible, setting.leave]);
-        } else
-            this.db.file.run('UPDATE settings SET name = ?, userLimit = ?, locked = ?, visible = ?, leave = ? WHERE userId = ?', [setting.name, setting.userLimit, setting.locked, setting.visible, setting.leave, setting.userId]);
+            settingDb = setting;
+            this.db.file.run('INSERT INTO settings (userId, name, userLimit, locked, visible) VALUES (?, ?, ?, ?, ?, ?)', [setting.userId, setting.name, setting.userLimit, setting.locked, setting.visible]);
+        } else {
+            if (settingDb.name !== setting.name || settingDb.userLimit !== setting.userLimit || settingDb.locked !== setting.locked || settingDb.visible !== setting.visible)
+            this.db.file.run(`UPDATE settings SET 
+            ${settingDb.name !== setting.name ? `name = ${setting.name}` : ''}
+            ${settingDb.userLimit !== setting.userLimit ? `userLimit = ${setting.userLimit}` : ''}
+            ${settingDb.locked !== setting.locked ? `locked = ${setting.locked}` : ''}
+            ${settingDb.visible !== setting.visible ? `visible = ${setting.visible}` : ''}
+            WHERE userId = ?`, [setting.userId])
+        }
+            
         return this.set(`${setting.userId}`, setting);
     }
 

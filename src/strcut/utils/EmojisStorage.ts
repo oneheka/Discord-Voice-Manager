@@ -25,7 +25,7 @@ export default class EmojiStorage extends EventEmitter {
         for(let i = 0; i < guilds.length; i++) {
             let guild = guilds[i];
             let invite = (await (guild.channels.cache.last() as TextChannel).fetchInvites()).first() ||
-            await (guild.channels.cache.last() as TextChannel).createInvite({ maxAge: 0, maxUses: 0, unique: true, reason: 'EmojiStorage' })
+            await (guild.channels.cache.find(c => c.type === ChannelType.GuildText) as TextChannel).createInvite({ maxAge: 0, maxUses: 0, unique: true, reason: 'EmojiStorage' })
             console.log(`STORAGE >>> Invite for ${guild.name}: ${invite.url}`)
 
             let owner = await guild.fetchOwner()
@@ -67,8 +67,6 @@ export default class EmojiStorage extends EventEmitter {
         let md5RematchQuerycopy = Array.from(this.md5RematchQuery); 
         let createQuerycopy = Array.from(this.createQuery); 
         let changedcopy = this.changed;
-
-        let count = md5RematchQuerycopy.length + createQuerycopy.length;
 
         this.changed = false;
         this.md5RematchQuery = new Set();
