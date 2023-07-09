@@ -1,7 +1,7 @@
 {
   "name": "discord-voice-manager",
   "description": "Бот для приватных комнат Discord",
-  "author": "Heka#4589 и аква переделал всё под sqlite3 и добавил EmojiStorage",
+  "author": "oneheka & aqua.coder",
   "version": "4.0.0",
   "main": "dist/index.js",
   "license": "ISC",
