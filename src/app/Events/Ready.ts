@@ -1,4 +1,4 @@
-import { VoiceChannel, TextChannel, ActionRowBuilder, ButtonBuilder, ChannelType } from 'discord.js';
+import { VoiceChannel, TextChannel, ActionRowBuilder, ButtonBuilder, ChannelType, CategoryChannel } from 'discord.js';
 import EmbedBuilder from '../../strcut/utils/EmbedBuilder';
 import Event from '../../strcut/base/Event';
 import Client from '../../strcut/Client';
@@ -34,6 +34,16 @@ export default new Event(
             if(channel.members.size === 0) {
                 channel.delete();
             }
+        })
+
+        client.db.creators.forEach(async (creator) => {
+            let category = client.channels.cache.get(creator.categoryId) as CategoryChannel
+            if(!category) return;
+            category.children.cache.forEach(async (channel) => {
+                if(channel.type === ChannelType.GuildVoice && channel.members.size === 0 && channel.id !== creator.voiceChannelId) {
+                    channel.delete();
+                }
+            })
         })
         if(!client.config.settings.debug)
             beautifulConsolePanel(client);
