@@ -15,6 +15,10 @@ export default class Utils {
         return this.client.modals.cache.get(search)
     }
 
+    getCommand(search: string) {
+        return this.client.commands.cache.get(search)
+    }
+
     resolveChannelName(config: IGuildConfig, member: GuildMember) {
         if(config.defaultName) {
             return `${config.defaultName.replace('{username}', member.displayName)}`
