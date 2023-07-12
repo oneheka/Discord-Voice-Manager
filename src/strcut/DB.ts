@@ -81,11 +81,6 @@ class CreatorsManager extends Collection<string, Creator> {
     
     async dbGet(guildId: string, categoryId: string): Promise<Creator | undefined> {
         let result = this.get(`${guildId}.${categoryId}`);
-        if (!result) {
-            result = await this.db.file.all('SELECT * FROM voiceCreators WHERE guildId = ?', [guildId])[0];
-            if(result)
-                this.set(`${guildId}.${categoryId}`, result);
-        }
         if(!result) {
             result = await this.create(guildId);
             this.set(`${guildId}.${result.categoryId}`, result);
@@ -170,11 +165,6 @@ class RoomManager extends Collection<string, Room> {
     
     async dbGet(voiceChannelId: string): Promise<Room | undefined> {
         let result = this.get(`${voiceChannelId}`);
-        if (!result) {
-            result = await this.db.file.all('SELECT * FROM rooms WHERE voiceChannelId = ?', [voiceChannelId])[0];
-            if(result)
-                this.set(`${voiceChannelId}`, result);
-        }
         return result;
     }
     async dbSet(room: Room) {
@@ -210,11 +200,7 @@ class SettingsManager extends Collection<string, Setting> {
 
     async dbGet(userId: string): Promise<Setting | undefined> {
         let result = this.get(`${userId}`);
-        if (!result) {
-            result = await this.db.file.all('SELECT * FROM settings WHERE userId = ?', [userId])[0];
-            if(result)
-                this.set(`${userId}`, result);
-            else {
+            if (!result) {
                 result = {
                     userId: userId,
                     name: '0',
@@ -226,7 +212,6 @@ class SettingsManager extends Collection<string, Setting> {
                 this.set(`${userId}`, result);
                 this.db.file.run('INSERT INTO settings (userId, name, userLimit, locked, visible) VALUES (?, ?, ?, ?, ?)', [result.userId, result.name, result.userLimit, result.locked, result.visible]);
             }
-        }
         return result;
     }
 

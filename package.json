@@ -1,13 +1,14 @@
 {
   "name": "discord-voice-manager",
   "description": "Бот для приватных комнат Discord",
-  "author": "Heka#4589",
-  "version": "3.0.0",
+  "author": "oneheka & aqua.coder",
+  "version": "4.0.0",
   "main": "dist/index.js",
   "license": "ISC",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "build": "npx tsc && node dist/index.js"
   },
   "repository": {
     "type": "git",
